@@ -37,6 +37,7 @@ chan1 = AnalogIn(mcp, MCP.P1)
 
 
 def timed_thread():
+	global is_on
 	global sample_rate
 	global start_time
 	thread = threading.Timer(sample_rate, timed_thread)
@@ -57,7 +58,7 @@ def callback_power(self):
 	else:
 		os.system('clear')
 		startup()
-		timed_thread()
+#		timed_thread()
 		is_on = True
 	
 
@@ -70,7 +71,7 @@ def setup():
 
 
 def startup():
-	print("Time" + "\t" + "Sys Timer" + "\t" + "Temp" + "\t" + "Buzzer") # setting up display on program start, will need to set listener in setup after this
+	print("Time" + "\t\t\t" + "Sys Timer" + "\t" + "Temp" + "\t" + "Buzzer") # setting up display on program start, will need to set listener in setup after this
 
 
 if __name__ == "__main__":
