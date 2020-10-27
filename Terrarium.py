@@ -19,6 +19,7 @@ is_on = True
 thread = None
 # get the starting time of the program
 start_time = datetime.datetime.now()
+current_time = 0
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -37,15 +38,25 @@ chan1 = AnalogIn(mcp, MCP.P1)
 
 
 def timed_thread():
+	#  use flag here to set condition for which when is_on is true, print as normal 
 	global thread
 	global is_on
 	global sample_rate
 	global start_time
+	global current_time
 	thread = threading.Timer(sample_rate, timed_thread)
 	thread.daemon = True
 	thread.start()
-	current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
-	print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
+	if is_on:
+		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
+		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
+		pass
+	else:
+		print("logging disabled")
+		# testing
+		pass
+	
+	#  and if is_on is false, just do nothing until its set to true again
 	pass
 
 
@@ -63,7 +74,6 @@ def callback_power(self):
 		os.system('clear')
 		startup()
 #		timed_thread()
-
 		is_on = True
 	
 
