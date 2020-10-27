@@ -16,7 +16,7 @@ GPIO.setmode(GPIO.BCM) # default setup is BCM
 btn_power = 26
 sample_rate = 5  # default is 5
 is_on = True
-
+thread = None
 # get the starting time of the program
 start_time = datetime.datetime.now()
 
@@ -37,6 +37,7 @@ chan1 = AnalogIn(mcp, MCP.P1)
 
 
 def timed_thread():
+	global thread
 	global is_on
 	global sample_rate
 	global start_time
@@ -50,15 +51,19 @@ def timed_thread():
 
 def callback_power(self):
 	global is_on
+	global thread
 	if is_on:
+		thread.join()
 		os.system('clear')
 		print("logging stopped")
+		#		thread needs to be stopped on callback event, loggging is NOT stopped.yet
 		is_on = False
 		pass
 	else:
 		os.system('clear')
 		startup()
 #		timed_thread()
+
 		is_on = True
 	
 
