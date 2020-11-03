@@ -80,8 +80,8 @@ def save_sample(time_start ,time_current , temp , buz):
         a_list = collections.deque(samples)     # use python built in to rotate list 4 to the right
         a_list.rotate(4)
         samples_new = a_list
-        samples[0] = time_start
-        samples[1] = time_current
+        samples[0] = time_start                 #after rotation last sample will be in 1st position
+        samples[1] = time_current               #replace this with the most recent sample
         samples[2] = temp
         samples[3] = buz
 
