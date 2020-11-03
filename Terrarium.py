@@ -10,9 +10,13 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn 
 import RPi.GPIO as GPIO
 import os
+import ES2EEPROMUtils
+import random
+
 
 GPIO.setmode(GPIO.BCM) # default setup is BCM
 
+#define pins used and other admin
 btn_power = 26
 sample_rate = 5  # default is 5
 is_on = True
@@ -20,6 +24,7 @@ thread = None
 # get the starting time of the program
 start_time = datetime.datetime.now()
 current_time = 0
+eeprom = ES2EEPROMUtils.ES2EEPROM()
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -50,15 +55,35 @@ def timed_thread():
 	if is_on:
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
-		pass
+        save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2) , "*")
 	else:
 		print("logging disabled")
 		# testing
 		pass
-	
 	#  and if is_on is false, just do nothing until its set to true again
 	pass
 
+def save_sample(time_start ,time_current , temp , buz):
+    amount_samples = eeprom.read_byte(0)
+    samples = []
+    samples = eeprom.read_block(1,amount_samples*4)
+    if  amount_samples < 21:
+        samples.reverse()           #reverse list so that most recent is last
+        samples.append(buz)         #add items to list in reverse order
+        sample.append(temp)
+        samples.append(time_current)
+        samples.append(time_start)
+        samples.reverse()           #reverse list back to original form but now with most recent 1st
+        saver_samples(samples)
+        pass
+    else:
+        a_list = collections.deque(samples)     # use python built in to rotate list 4 to the right
+        a_list.rotate(4)
+        samples_new = a_list
+        samples[0] = time_start
+        samples[1] = time_current
+        samples[2] = temp
+        samples[3] = buz
 
 def callback_power(self):
 	global is_on
