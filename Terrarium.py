@@ -41,6 +41,28 @@ chan = AnalogIn(mcp, MCP.P0)
 # creat an analog input channel on pin 1 (temp sensor)
 chan1 = AnalogIn(mcp, MCP.P1)
 
+
+def timed_thread():
+	#  use flag here to set condition for which when is_on is true, print as normal 
+	global thread
+	global is_on
+	global sample_rate
+	global start_time
+	global current_time
+	thread = threading.Timer(sample_rate, timed_thread)
+	thread.daemon = True
+	thread.start()
+	if is_on:
+		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
+		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
+        save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2) , "*")
+	else:
+		print("logging disabled")
+		# testing
+		pass
+	#  and if is_on is false, just do nothing until its set to true again
+	pass
+
 def save_sample(time_start ,time_current , temp , buz):
     amount_samples = eeprom.read_byte(0)
     samples = []
@@ -62,27 +84,6 @@ def save_sample(time_start ,time_current , temp , buz):
         samples[1] = time_current
         samples[2] = temp
         samples[3] = buz
-
-def timed_thread():
-	#  use flag here to set condition for which when is_on is true, print as normal 
-	global thread
-	global is_on
-	global sample_rate
-	global start_time
-	global current_time
-	thread = threading.Timer(sample_rate, timed_thread)
-	thread.daemon = True
-	thread.start()
-	if is_on:
-		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
-		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
-		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2) , "*")
-	else:
-		print("logging disabled")
-
-
-pass
-
 
 def callback_power(self):
 	global is_on
