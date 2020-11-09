@@ -68,8 +68,8 @@ def save_sample(time_start ,time_current , temp , buz):
         samples[3] = buz
 
 
-@blynk.handle_event('thread handling')
-def timed_thread(vpin):
+
+def timed_thread():
 	#  use flag here to set condition for which when is_on is true, print as normal 
 	global thread
 	global is_on
@@ -85,10 +85,8 @@ def timed_thread(vpin):
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
 		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-		blynk.virtual_write(7, temp)
 		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
-		blynk.virtual_write(7, '-')
 		print("logging disabled")
 
 pass
@@ -111,31 +109,15 @@ def callback_power(self):
 		is_on = True
 
 
-#@blynk.handle_event('read V7')
-#def read_virtual_pin_handler(pin):
-#	global temp
+@blynk.handle_event('read Sensors')
+def read_virtual_pin_handler(pin):
+	global temp
 	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-#	blynk.virtual_write(7, temp)
-
-
-#@blynk.handle_event('read polling rate V8')
-#def read_virtual_pin_handler2(pin):
-#	global sample_rate
-#    # send value to Virtual Pin and store it in Blynk Cloud
-#	blynk.virtual_write(8, sample_rate)
-
-
-#WRITE_EVENT_PRINT_MSG = "[WRITE_VIRTUAL_PIN_EVENT] Pin: V{} Value: '{}'"
-
-
-#@blynk.handle_event('write to V4 LED')
-#def write_virtual_pin_handler(pin, value):
-#	global is_on
-#	print(WRITE_EVENT_PRINT_MSG.format(pin, value))
+	blynk.virtual_write(7, temp)
 
 
 def setup():
-	timed_thread(0) # call it once to start thread
+	timed_thread() # call it once to start thread
 	GPIO.setup(btn_power, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set button in pull up mode
 	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=500) # set listener for button with 500ms bounce time
 	pass
