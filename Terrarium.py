@@ -145,6 +145,7 @@ def V8_read_handler():
 def setup():
 	timed_thread() # call it once to start thread
 	GPIO.setup(btn_power, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set button in pull up mode
+	GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_UP) # configure as pull up resistor
 	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=500) # set listener for button with 500ms bounce time
 	GPIO.add_event_detect(btn, GPIO.FALLING, callback=callback, bouncetime=500)	# adds detection event for falling edge with bounce of 0.5s
 	pass
