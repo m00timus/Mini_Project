@@ -110,7 +110,7 @@ def callback_power(self):
 		is_on = True
 
 
-@blynk.on('printV7')
+@blynk.on(7)
 def V7_read_handler():
 	global temp
 	blynk.virtual_write(7, temp)
