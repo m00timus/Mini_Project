@@ -77,7 +77,7 @@ def timed_thread():
 	global start_time
 	global current_time
 	global temp
-	thread = threading.Timer(sample_rate, timed_thread(0))
+	thread = threading.Timer(sample_rate, timed_thread)
 	thread.daemon = True
 	thread.start()
 	#write_to_blynk_is_on()
