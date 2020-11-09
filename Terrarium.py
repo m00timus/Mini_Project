@@ -77,12 +77,13 @@ def timed_thread():
 	thread = threading.Timer(sample_rate, timed_thread)
 	thread.daemon = True
 	thread.start()
+	write_to_blynk_is_on()
 	if is_on:
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
 		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-		#data = 'test data'
-		#blynk.virtual_write(7, temp)
+		write_to_blynk_temp()
+		
 		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
 		print("logging disabled")
