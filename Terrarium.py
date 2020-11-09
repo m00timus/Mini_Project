@@ -12,24 +12,21 @@ import RPi.GPIO as GPIO
 import os
 import ES2EEPROMUtils
 import random
-import blynklib
-from BlynkTimer import BlynkTimer
+import BlynkLib
 
 BLYNK_AUTH = 'iGH2zQoSe7PfZNE6GJGL8-rBwRzVqD-Z' #insert your Auth Token here
-blynk = blynklib.Blynk(BLYNK_AUTH)
-timer = BlynkTimer()
-
+blynk = BlynkLib.Blynk(BLYNK_AUTH)
 GPIO.setmode(GPIO.BCM) # default setup is BCM
 
 #define pins used and other admin
 btn_power = 26
 sample_rate = 5  # default is 5
+pin = 7
 is_on = True
 thread = None
 temp = ''
 # get the starting time of the program
 start_time = datetime.datetime.now()
-
 current_time = 0
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
@@ -84,7 +81,6 @@ def timed_thread():
 	thread = threading.Timer(sample_rate, timed_thread)
 	thread.daemon = True
 	thread.start()
-	#write_to_blynk_is_on()
 	if is_on:
 		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
@@ -113,18 +109,17 @@ def callback_power(self):
 		is_on = True
 
 
-#@blynk.handle_event('read Sensors')
-#def read_virtual_pin_handler(pin):
-#	global temp
-#	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-#	blynk.virtual_write(7, temp)
+@blynk.VIRTUAL_READ(pin)
+def read_virtual_pin_handler(pin):
+	global temp
+	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
+	blynk.virtual_write(pin, temp)
 
 
 def setup():
 	timed_thread() # call it once to start thread
 	GPIO.setup(btn_power, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set button in pull up mode
 	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=500) # set listener for button with 500ms bounce time
-	timer.set_interval(1, timed_thread)
 	pass
 
 
@@ -135,9 +130,6 @@ def startup():
 if __name__ == "__main__":
 	startup() # calls initial display setup
 	setup() #  call setup function to start up program
-
-
 	# tell program to run indefinitely
 	while True:
 		blynk.run()
-		timer.run()
