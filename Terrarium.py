@@ -59,9 +59,9 @@ def save_sample(time_start ,time_current , temp , buz):
         saver_samples(samples)
         pass
     else:
-        a_list = collections.deque(samples)     # use python built in to rotate list 4 to the right
-        a_list.rotate(4)
-        samples_new = a_list
+        #a_list = collections.deque(samples)     # use python built in to rotate list 4 to the right
+        #a_list.rotate(4)
+        #samples_new = a_list
         samples[0] = time_start
         samples[1] = time_current
         samples[2] = temp
@@ -80,7 +80,8 @@ def timed_thread():
 	if is_on:
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
-		blynk.virtual_write(0, str(round(((chan1.voltage - 0.500)/0.010), 2)))
+		temp = round(((chan1.voltage - 0.500)/0.010), 2)
+		blynk.virtual_write(7, temp)
 		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
 		print("logging disabled")
@@ -122,4 +123,5 @@ if __name__ == "__main__":
 	setup() #  call setup function to start up program
 	# tell program to run indefinitely
 	while True:
+		blynk.run()
 		pass
