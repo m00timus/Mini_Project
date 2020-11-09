@@ -116,7 +116,7 @@ def read_virtual_pin_handler(pin):
 	global temp
 	output = (str(start_time) + "s\t" + str(current_time) + "s\t\t" + temp + 'C' + "\t\t" + "*")
 	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-	blynk.virtual_write(6, output)
+	blynk.virtual_write(6, '--')
 	#blynk.virtual_write(pin, temp)
 
 
