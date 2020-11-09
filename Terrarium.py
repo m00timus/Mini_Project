@@ -69,7 +69,7 @@ def save_sample(time_start ,time_current , temp , buz):
 
 
 @blynk.handle_event('thread handling')
-def timed_thread():
+def timed_thread(vpin):
 	#  use flag here to set condition for which when is_on is true, print as normal 
 	global thread
 	global is_on
@@ -77,7 +77,7 @@ def timed_thread():
 	global start_time
 	global current_time
 	global temp
-	thread = threading.Timer(sample_rate, timed_thread)
+	thread = threading.Timer(sample_rate, timed_thread(0))
 	thread.daemon = True
 	thread.start()
 	#write_to_blynk_is_on()
@@ -135,7 +135,7 @@ def callback_power(self):
 
 
 def setup():
-	timed_thread() # call it once to start thread
+	timed_thread(0) # call it once to start thread
 	GPIO.setup(btn_power, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set button in pull up mode
 	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=500) # set listener for button with 500ms bounce time
 	pass
