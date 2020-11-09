@@ -77,12 +77,12 @@ def timed_thread():
 	thread = threading.Timer(sample_rate, timed_thread)
 	thread.daemon = True
 	thread.start()
-	write_to_blynk_is_on()
+	#write_to_blynk_is_on()
 	if is_on:
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
 		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-		write_to_blynk_temp()
+		#write_to_blynk_temp()
 		
 		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
@@ -117,20 +117,20 @@ def write_to_blynk_temp(pin):
 	blynk.virtual_write(7, temp)
 
 
-@blynk.handle_event('read paused state (V12)')
-def write_to_blynk_is_on(pin):
-	global is_on
-    # send value to Virtual Pin and store it in Blynk Cloud
-	blynk.virtual_write(12, is_on)
+#@blynk.handle_event('read paused state (V12)')
+#def write_to_blynk_is_on(pin):
+#	global is_on
+#    # send value to Virtual Pin and store it in Blynk Cloud
+#	blynk.virtual_write(12, is_on)
 
 
-WRITE_EVENT_PRINT_MSG = "[WRITE_VIRTUAL_PIN_EVENT] Pin: V{} Value: '{}'"
+#WRITE_EVENT_PRINT_MSG = "[WRITE_VIRTUAL_PIN_EVENT] Pin: V{} Value: '{}'"
 
 
-@blynk.handle_event('write to V4 LED')
-def write_virtual_pin_handler(pin, value):
-	global is_on
-	print(WRITE_EVENT_PRINT_MSG.format(pin, value))
+#@blynk.handle_event('write to V4 LED')
+#def write_virtual_pin_handler(pin, value):
+#	global is_on
+#	print(WRITE_EVENT_PRINT_MSG.format(pin, value))
 
 
 def setup():
