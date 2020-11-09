@@ -12,11 +12,10 @@ import RPi.GPIO as GPIO
 import os
 import ES2EEPROMUtils
 import random
-import blynklib
-import blynktimer
+import BlynkLib
 
 BLYNK_AUTH = 'iGH2zQoSe7PfZNE6GJGL8-rBwRzVqD-Z' #insert your Auth Token here
-blynk = blynklib.Blynk(BLYNK_AUTH)
+blynk = BlynkLib.Blynk(BLYNK_AUTH)
 #timer = blynktimer.Timer()
 GPIO.setmode(GPIO.BCM) # default setup is BCM
 
@@ -111,13 +110,10 @@ def callback_power(self):
 		is_on = True
 
 
-@blynk.handle_event(pin)
-def read_virtual_pin_handler(pin):
+@blynk.on('printV7')
+def V7_read_handler():
 	global temp
-	output = (str(start_time) + "s\t" + str(current_time) + "s\t\t" + temp + 'C' + "\t\t" + "*")
-	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-	blynk.virtual_write(6, '--')
-	#blynk.virtual_write(pin, temp)
+	blynk.virtual_write(7, temp)
 
 
 def setup():
