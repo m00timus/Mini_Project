@@ -23,6 +23,7 @@ btn_power = 26
 sample_rate = 5  # default is 5
 is_on = True
 thread = None
+temp = ''
 # get the starting time of the program
 start_time = datetime.datetime.now()
 current_time = 0
@@ -74,6 +75,7 @@ def timed_thread():
 	global sample_rate
 	global start_time
 	global current_time
+	global temp
 	thread = threading.Timer(sample_rate, timed_thread)
 	thread.daemon = True
 	thread.start()
@@ -82,8 +84,6 @@ def timed_thread():
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
 		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-		#write_to_blynk_temp()
-		
 		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
 		print("logging disabled")
@@ -110,10 +110,8 @@ def callback_power(self):
 
 @blynk.handle_event('read temp (V7)')
 def write_to_blynk_temp(pin):
-	temp = '0'
-    # Example: get sensor value, perform calculations, etc
-	temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-    # send value to Virtual Pin and store it in Blynk Cloud
+	global temp
+	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
 	blynk.virtual_write(7, temp)
 
 
