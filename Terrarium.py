@@ -105,7 +105,17 @@ def callback_power(self):
 		startup()
 #		timed_thread()
 		is_on = True
-	
+
+
+@blynk.handle_event('read V22')
+def read_virtual_pin_handler(pin):
+    
+    # your code goes here
+    # ...
+    # Example: get sensor value, perform calculations, etc
+    temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
+    # send value to Virtual Pin and store it in Blynk Cloud 
+    blynk.virtual_write(7, temp)
 
 
 def setup():
