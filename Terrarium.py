@@ -23,6 +23,7 @@ GPIO.setmode(GPIO.BCM) # default setup is BCM
 btn_power = 26
 sample_rate = 5  # default is 5
 pin = 6
+btn = 19
 is_on = True
 thread = None
 temp = ''
@@ -93,6 +94,17 @@ def timed_thread():
 pass
 
 
+def callback(self): # simple function to change sample rate between 3 states
+	global sample_rate
+	if sample_rate == 10:
+		sample_rate = 5
+	elif sample_rate == 5:
+		sample_rate = 1
+	else:
+		sample_rate = 10
+	pass
+
+
 def callback_power(self):
 	global is_on
 	global thread
@@ -134,6 +146,7 @@ def setup():
 	timed_thread() # call it once to start thread
 	GPIO.setup(btn_power, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set button in pull up mode
 	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=500) # set listener for button with 500ms bounce time
+	GPIO.add_event_detect(btn, GPIO.FALLING, callback=callback, bouncetime=500)	# adds detection event for falling edge with bounce of 0.5s
 	pass
 
 
