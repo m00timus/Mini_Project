@@ -12,9 +12,12 @@ import RPi.GPIO as GPIO
 import os
 import ES2EEPROMUtils
 import random
+import blynklib
 
-
+BLYNK_AUTH = 'iGH2zQoSe7PfZNE6GJGL8-rBwRzVqD-Z' #insert your Auth Token here
+blynk = blynklib.Blynk(BLYNK_AUTH)
 GPIO.setmode(GPIO.BCM) # default setup is BCM
+
 
 #define pins used and other admin
 btn_power = 26
@@ -77,6 +80,7 @@ def timed_thread():
 	if is_on:
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
+		blynk.virtual_write(0, str(round(((chan1.voltage - 0.500)/0.010), 2)))
 		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
 		print("logging disabled")
