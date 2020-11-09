@@ -109,7 +109,7 @@ def callback_power(self):
 
 
 @blynk.handle_event('read temp (V7)')
-def write_to_blynk_temp(pin):
+def wread_virtual_pin_handler(pin):
 	global temp
 	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
 	blynk.virtual_write(7, temp)
