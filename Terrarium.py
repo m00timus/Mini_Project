@@ -18,7 +18,6 @@ BLYNK_AUTH = 'iGH2zQoSe7PfZNE6GJGL8-rBwRzVqD-Z' #insert your Auth Token here
 blynk = blynklib.Blynk(BLYNK_AUTH)
 GPIO.setmode(GPIO.BCM) # default setup is BCM
 
-
 #define pins used and other admin
 btn_power = 26
 sample_rate = 5  # default is 5
@@ -67,6 +66,7 @@ def save_sample(time_start ,time_current , temp , buz):
         samples[2] = temp
         samples[3] = buz
 
+
 def timed_thread():
 	#  use flag here to set condition for which when is_on is true, print as normal 
 	global thread
@@ -80,8 +80,9 @@ def timed_thread():
 	if is_on:
 		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
 		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
-		temp = round(((chan1.voltage - 0.500)/0.010), 2)
-		blynk.virtual_write(7, temp)
+		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
+		#data = 'test data'
+		#blynk.virtual_write(7, temp)
 		save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
 		print("logging disabled")
