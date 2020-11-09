@@ -133,6 +133,6 @@ if __name__ == "__main__":
 	startup() # calls initial display setup
 	setup() #  call setup function to start up program
 	# tell program to run indefinitely
-	while True:
-		blynk.run()
+while True:
+	blynk.run()
 #		timer.run()
