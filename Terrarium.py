@@ -22,7 +22,7 @@ GPIO.setmode(GPIO.BCM) # default setup is BCM
 #define pins used and other admin
 btn_power = 26
 sample_rate = 5  # default is 5
-pin = 7
+pin = 6
 is_on = True
 thread = None
 temp = ''
@@ -110,10 +110,24 @@ def callback_power(self):
 		is_on = True
 
 
-@blynk.on(7)
+@blynk.VIRTUAL_READ(7)
 def V7_read_handler():
 	global temp
 	blynk.virtual_write(7, temp)
+
+
+@blynk.VIRTUAL_READ(8)
+def V8_read_handler():
+	global sample_rate
+	blynk.virtual_write(8, sample_rate)
+
+
+#@blynk.on("V6")
+#def V6_read_handler(pin):
+#	global temp
+#	print('what')
+#	output = (str(start_time) + "s\t" + str(current_time) + "s\t\t" + temp + 'C' + "\t\t" + "*")
+#	blynk.virtual_write(pin, output)
 
 
 def setup():
