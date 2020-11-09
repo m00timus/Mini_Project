@@ -69,7 +69,7 @@ def save_sample(time_start ,time_current , temp , buz):
 
 
 @blynk.handle_event('thread handling')
-def timed_thread(pin):
+def timed_thread():
 	#  use flag here to set condition for which when is_on is true, print as normal 
 	global thread
 	global is_on
