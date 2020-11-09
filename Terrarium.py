@@ -109,17 +109,17 @@ def callback_power(self):
 
 
 @blynk.handle_event('read V7')
-def wread_virtual_pin_handler(pin):
+def read_virtual_pin_handler(pin):
 	global temp
 	#temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
 	blynk.virtual_write(7, temp)
 
 
-#@blynk.handle_event('read paused state (V12)')
-#def write_to_blynk_is_on(pin):
-#	global is_on
-#    # send value to Virtual Pin and store it in Blynk Cloud
-#	blynk.virtual_write(12, is_on)
+@blynk.handle_event('read polling rate V8')
+def read_virtual_pin_handler2(pin):
+	global sample_rate
+    # send value to Virtual Pin and store it in Blynk Cloud
+	blynk.virtual_write(8, sample_rate)
 
 
 #WRITE_EVENT_PRINT_MSG = "[WRITE_VIRTUAL_PIN_EVENT] Pin: V{} Value: '{}'"
