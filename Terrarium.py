@@ -136,6 +136,17 @@ def V8_read_handler():
 	blynk.virtual_write(8, sample_rate)
 
 
+@blynk.VIRTUAL_READ(9)
+def V9_read_handler():
+	global current_time
+	blynk.virtual_write(9, current_time)
+
+
+@blynk.VIRTUAL_READ(10)
+def V10_read_handler():
+	global is_on
+	blynk.virtual_write(10, is_on)
+
 # Register Virtual Pins
 @blynk.VIRTUAL_WRITE(1)
 def my_write_handler(value):
@@ -180,7 +191,7 @@ def setup():
 	timed_thread() # call it once to start thread
 	GPIO.setup(btn_power, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set button in pull up mode
 	GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_UP) # configure as pull up resistor
-	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=500) # set listener for button with 500ms bounce time
+	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=1000) # set listener for button with 1000ms bounce time
 	GPIO.add_event_detect(btn, GPIO.FALLING, callback=callback, bouncetime=500)	# adds detection event for falling edge with bounce of 0.5s
 	pass
 
