@@ -21,8 +21,13 @@ GPIO.setmode(GPIO.BCM) # default setup is BCM
 #define pins used and other admin
 btn_power = 26
 sample_rate = 5  # default is 5
+pin = 6
+value = 1
+value2 = 2
+btn = 19
 is_on = True
 thread = None
+temp = ''
 # get the starting time of the program
 start_time = datetime.datetime.now()
 current_time = 0
@@ -79,20 +84,30 @@ def timed_thread():
 	global sample_rate
 	global start_time
 	global current_time
+	global temp
 	thread = threading.Timer(sample_rate, timed_thread)
 	thread.daemon = True
 	thread.start()
 	if is_on:
-		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
-		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + str(round(((chan1.voltage - 0.500)/0.010), 2)) + 'C' + "\t\t" + "*")
 		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-		#data = 'test data'
-		#blynk.virtual_write(7, temp)
-		#save_sample(0, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
+		current_time = math.trunc((datetime.datetime.now() - start_time).total_seconds())
+		print(str(start_time) + "s\t" + str(current_time) + "s\t\t" + temp + 'C' + "\t\t" + "*")
+		#save_sample(start_time, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
 		print("logging disabled")
 
 pass
+
+
+def callback(self): # simple function to change sample rate between 3 states
+	global sample_rate
+	if sample_rate == 10:
+		sample_rate = 5
+	elif sample_rate == 5:
+		sample_rate = 1
+	else:
+		sample_rate = 10
+	pass
 
 
 def callback_power(self):
@@ -112,22 +127,72 @@ def callback_power(self):
 		is_on = True
 
 
-@blynk.handle_event('read V7')
-def read_virtual_pin_handler(pin):
-    
-    # your code goes here
-    # ...
-	temp = '0'
-    # Example: get sensor value, perform calculations, etc
-	temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
-    # send value to Virtual Pin and store it in Blynk Cloud
+@blynk.VIRTUAL_READ(7)
+def V7_read_handler():
+	global temp
 	blynk.virtual_write(7, temp)
+
+
+@blynk.VIRTUAL_READ(8)
+def V8_read_handler():
+	global sample_rate
+	blynk.virtual_write(8, sample_rate)
+
+
+@blynk.VIRTUAL_READ(9)
+def V9_read_handler():
+	global current_time
+	blynk.virtual_write(9, current_time)
+
+
+@blynk.VIRTUAL_READ(10)
+def V10_read_handler():
+	global is_on
+	if is_on:
+		blynk.virtual_write(10, 0)
+	else:
+		blynk.virtual_write(10, 1)
+	
+
+# Register Virtual Pins
+@blynk.VIRTUAL_WRITE(1)
+def my_write_handler(value):
+	global is_on
+	global thread
+	if is_on:
+		thread.join()
+		os.system('clear')
+		print("logging stopped")
+		#		thread needs to be stopped on callback event, loggging is NOT stopped.yet
+		is_on = False
+		pass
+	else:
+		os.system('clear')
+		startup()
+#		timed_thread()
+		is_on = True
+
+
+# Register Virtual Pins
+@blynk.VIRTUAL_WRITE(2)
+def my_write_handler(value2):
+	global sample_rate
+	if sample_rate == 10:
+		sample_rate = 5
+	elif sample_rate == 5:
+		sample_rate = 1
+	else:
+		sample_rate = 10
+	pass
+
 
 
 def setup():
 	timed_thread() # call it once to start thread
 	GPIO.setup(btn_power, GPIO.IN, pull_up_down=GPIO.PUD_UP) # set button in pull up mode
-	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=500) # set listener for button with 500ms bounce time
+	GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_UP) # configure as pull up resistor
+	GPIO.add_event_detect(btn_power, GPIO.FALLING, callback=callback_power, bouncetime=1000) # set listener for button with 1000ms bounce time
+	GPIO.add_event_detect(btn, GPIO.FALLING, callback=callback, bouncetime=500)	# adds detection event for falling edge with bounce of 0.5s
 	pass
 
 
