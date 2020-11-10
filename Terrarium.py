@@ -139,15 +139,33 @@ def V8_read_handler():
 # Register Virtual Pins
 @blynk.VIRTUAL_WRITE(1)
 def my_write_handler(value):
-	callback_power
-    #print('Current V1 value: {}'.format(value))
+	global is_on
+	global thread
+	if is_on:
+		thread.join()
+		os.system('clear')
+		print("logging stopped")
+		#		thread needs to be stopped on callback event, loggging is NOT stopped.yet
+		is_on = False
+		pass
+	else:
+		os.system('clear')
+		startup()
+#		timed_thread()
+		is_on = True
 
 
 # Register Virtual Pins
 @blynk.VIRTUAL_WRITE(2)
 def my_write_handler(value2):
-	callback
-    #print('Current V1 value: {}'.format(value))
+	global sample_rate
+	if sample_rate == 10:
+		sample_rate = 5
+	elif sample_rate == 5:
+		sample_rate = 1
+	else:
+		sample_rate = 10
+	pass
 
 
 #@blynk.on("V6")
