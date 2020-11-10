@@ -30,7 +30,7 @@ is_on = True
 thread = None
 temp = ''
 # get the starting time of the program
-start_time = datetime.datetime.now()
+start_time = round(datetime.datetime.now(), 2)
 current_time = 0
 eeprom = ES2EEPROMUtils.ES2EEPROM()
 
