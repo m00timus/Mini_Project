@@ -44,27 +44,32 @@ chan = AnalogIn(mcp, MCP.P0)
 chan1 = AnalogIn(mcp, MCP.P1)
 
 
-def save_sample(time_start ,time_current , temp , buz):
+def save_sample(time_start, time_current, temp, buz):
     amount_samples = eeprom.read_byte(0)
     samples = []
     samples = eeprom.read_block(1,amount_samples*4)
-    if  amount_samples < 21:
+    if amount_samples < 21:
         samples.reverse()           #reverse list so that most recent is last
         samples.append(buz)         #add items to list in reverse order
-        sample.append(temp)
+        samples.append(temp)
         samples.append(time_current)
         samples.append(time_start)
         samples.reverse()           #reverse list back to original form but now with most recent 1st
-        saver_samples(samples)
+        write_samples(samples)
         pass
     else:
-        #a_list = collections.deque(samples)     # use python built in to rotate list 4 to the right
-        #a_list.rotate(4)
-        #samples_new = a_list
-        samples[0] = time_start
-        samples[1] = time_current
-        samples[2] = temp
-        samples[3] = buz
+        samples_new = samples[-3:] + samples[:-3] 	#rotate list 4 to the right
+        samples_new[0] = time_start
+        samples_new[1] = time_current
+        samples_new[2] = temp
+        samples_new[3] = buz
+        write_samples(amount_samples, samples_new)
+        pass
+
+def write_samples(amount_samples,samples):
+    eeprom.write_byte(0,amount_samples)
+    eeprom.write_block(1,samples)
+
 
 
 def timed_thread():
