@@ -88,7 +88,7 @@ def timed_thread():
 		temp = str(round(((chan1.voltage - 0.500)/0.010), 2))
 		#data = 'test data'
 		#blynk.virtual_write(7, temp)
-		save_sample(0, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
+		#save_sample(0, current_time, round(((chan1.voltage - 0.500)/0.010), 2), "*")
 	else:
 		print("logging disabled")
 
