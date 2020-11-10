@@ -145,7 +145,11 @@ def V9_read_handler():
 @blynk.VIRTUAL_READ(10)
 def V10_read_handler():
 	global is_on
-	blynk.virtual_write(10, is_on)
+	if is_on:
+		blynk.virtual_write(10, 0)
+	else:
+		blynk.virtual_write(10, 1)
+	
 
 # Register Virtual Pins
 @blynk.VIRTUAL_WRITE(1)
