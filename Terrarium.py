@@ -139,14 +139,14 @@ def V8_read_handler():
 # Register Virtual Pins
 @blynk.VIRTUAL_WRITE(1)
 def my_write_handler(value):
-	callback_power()
+	callback_power(self)
     #print('Current V1 value: {}'.format(value))
 
 
 # Register Virtual Pins
 @blynk.VIRTUAL_WRITE(2)
 def my_write_handler(value2):
-	callback()
+	callback(self)
     #print('Current V1 value: {}'.format(value))
 
 
