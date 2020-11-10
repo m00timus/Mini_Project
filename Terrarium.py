@@ -12,7 +12,7 @@ import RPi.GPIO as GPIO
 import os
 import ES2EEPROMUtils
 import random
-import blynklib
+import BlynkLib
 
 BLYNK_AUTH = 'iGH2zQoSe7PfZNE6GJGL8-rBwRzVqD-Z' #insert your Auth Token here
 blynk = blynklib.Blynk(BLYNK_AUTH)
