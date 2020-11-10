@@ -23,6 +23,7 @@ GPIO.setmode(GPIO.BCM) # default setup is BCM
 btn_power = 26
 sample_rate = 5  # default is 5
 pin = 6
+value = 1
 btn = 19
 is_on = True
 thread = None
@@ -132,6 +133,12 @@ def V7_read_handler():
 def V8_read_handler():
 	global sample_rate
 	blynk.virtual_write(8, sample_rate)
+
+
+# Register Virtual Pins
+@blynk.VIRTUAL_WRITE(1)
+def my_write_handler(value):
+    print('Current V1 value: {}'.format(value))
 
 
 #@blynk.on("V6")
