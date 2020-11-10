@@ -24,6 +24,7 @@ btn_power = 26
 sample_rate = 5  # default is 5
 pin = 6
 value = 1
+value2 = 2
 btn = 19
 is_on = True
 thread = None
@@ -138,7 +139,15 @@ def V8_read_handler():
 # Register Virtual Pins
 @blynk.VIRTUAL_WRITE(1)
 def my_write_handler(value):
-    print('Current V1 value: {}'.format(value))
+	callback_power()
+    #print('Current V1 value: {}'.format(value))
+
+
+# Register Virtual Pins
+@blynk.VIRTUAL_WRITE(2)
+def my_write_handler(value2):
+	callback()
+    #print('Current V1 value: {}'.format(value))
 
 
 #@blynk.on("V6")
